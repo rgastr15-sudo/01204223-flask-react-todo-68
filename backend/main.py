@@ -56,7 +56,6 @@ with app.app_context():
 # ---------- Temporary in-memory list (legacy) ----------
 # ใช้ชั่วคราวสำหรับ POST / PATCH / DELETE
 
-todo_list = []
 
 # ---------- Routes ----------
 
@@ -68,19 +67,11 @@ def get_todos():
 
 # helper function (legacy)
 def new_todo(data):
-    if len(todo_list) == 0:
-        new_id = 1
-    else:
-        new_id = 1 + max([todo['id'] for todo in todo_list])
+    return TodoItem(
+        title=data['title'],
+        done=data.get('done', False)
+    )
 
-    if 'title' not in data:
-        return None
-
-    return {
-        "id": new_id,
-        "title": data['title'],
-        "done": data.get('done', False),
-    }
 
 # CREATE (legacy – ยังไม่ใช้ DB)
 @app.route('/api/todos/', methods=['POST'])
@@ -88,10 +79,12 @@ def add_todo():
     data = request.get_json()
     todo = new_todo(data)
     if todo:
-        todo_list.append(todo)
-        return jsonify(todo)
+        db.session.add(todo)          # เพิ่ม object เข้า session
+        db.session.commit()           # commit ลง database
+        return jsonify(todo.to_dict())
     else:
         return jsonify({'error': 'Invalid todo data'}), 400
+
 
 # UPDATE (legacy)
 @app.route('/api/todos/<int:id>/toggle/', methods=['PATCH'])
