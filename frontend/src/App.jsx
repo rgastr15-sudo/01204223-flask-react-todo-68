@@ -8,6 +8,8 @@ function App() {
 
   const [todoList, setTodoList] = useState([]);
   const [newTitle, setNewTitle] = useState("");
+  const [newComments, setNewComments] = useState({});
+
 
   useEffect(() => {
     fetchTodoList();
@@ -101,6 +103,29 @@ function App() {
         </>
       )}
       {/* ========================= */}
+      {/* ===== เพิ่ม comment ใหม่ ===== */}
+<div className="new-comment-forms">
+  <input
+    type="text"
+    value={newComments[todo.id] || ""}
+    onChange={(e) => {
+      const value = e.target.value;
+      setNewComments({
+        ...newComments,
+        [todo.id]: value
+      });
+    }}
+  />
+
+  {/* ปุ่มทดสอบ state */}
+  <button onClick={() => {
+    alert(newComments[todo.id])
+  }}>
+    Add Comment
+  </button>
+</div>
+{/* ============================ */}
+
     </li>
   ))}
 </ul>
