@@ -4,7 +4,7 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const TODOLIST_API_URL = 'http://localhost:5000/api/todos/';
+  const TODOLIST_API_URL = 'http://localhost:5001/api/todos/';
 
   const [todoList, setTodoList] = useState([]);
   const [newTitle, setNewTitle] = useState("");
@@ -78,14 +78,33 @@ function App() {
     <>
       <h1>Todo List</h1>
       <ul>
-        {todoList.map(todo => (
-          <li key={todo.id}>
-            <span className={todo.done ? "done" : ""}>{todo.title}</span>
-            <button onClick={() => {toggleDone(todo.id)}}>Toggle</button>
-            <button onClick={() => {deleteTodo(todo.id)}}>❌</button>
-          </li>
-        ))}
-      </ul>
+  {todoList.map(todo => (
+    <li key={todo.id}>
+      <span className={todo.done ? "done" : ""}>
+        {todo.title}
+      </span>
+
+      <button onClick={() => toggleDone(todo.id)}>Toggle</button>
+      <button onClick={() => deleteTodo(todo.id)}>❌</button>
+
+      {/* ===== แสดง comments ===== */}
+      {(todo.comments) && (todo.comments.length > 0) && (
+        <>
+          <b>Comments:</b>
+          <ul>
+            {todo.comments.map(comment => (
+              <li key={comment.id}>
+                {comment.message}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+      {/* ========================= */}
+    </li>
+  ))}
+</ul>
+
       New: <input type="text" value={newTitle} onChange={(e) => {setNewTitle(e.target.value)}} />
       <button onClick={() => {addNewTodo()}}>Add</button>
     </>
