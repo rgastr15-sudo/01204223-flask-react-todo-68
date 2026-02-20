@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import TodoItem from './TodoItem.jsx'
 
 function App() {
   const TODOLIST_API_URL = 'http://localhost:5001/api/todos/';
@@ -18,7 +19,7 @@ function App() {
   async function fetchTodoList() {
     try {
       const response = await fetch(TODOLIST_API_URL);
-      if (!response.ok) { 
+      if (!response.ok) {
         throw new Error('Network error');
       }
       const data = await response.json();
@@ -76,62 +77,41 @@ function App() {
     }
   }
 
+  async function addNewComment(todoId, newComment) {
+    try {
+      const url = `${TODOLIST_API_URL}${todoId}/comments/`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 'message': newComment }),
+      });
+      if (response.ok) {
+        await fetchTodoList();
+      }
+    } catch (error) {
+      console.error("Error adding new comment:", error);
+    }
+  }
+
   return (
     <>
       <h1>Todo List</h1>
       <ul>
-  {todoList.map(todo => (
-    <li key={todo.id}>
-      <span className={todo.done ? "done" : ""}>
-        {todo.title}
-      </span>
+        {todoList.map(todo => (
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            toggleDone={toggleDone}
+            deleteTodo={deleteTodo}
+            addNewComment={addNewComment}
+          />
+        ))}
+      </ul>
 
-      <button onClick={() => toggleDone(todo.id)}>Toggle</button>
-      <button onClick={() => deleteTodo(todo.id)}>❌</button>
-
-      {/* ===== แสดง comments ===== */}
-      {(todo.comments) && (todo.comments.length > 0) && (
-        <>
-          <b>Comments:</b>
-          <ul>
-            {todo.comments.map(comment => (
-              <li key={comment.id}>
-                {comment.message}
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-      {/* ========================= */}
-      {/* ===== เพิ่ม comment ใหม่ ===== */}
-<div className="new-comment-forms">
-  <input
-    type="text"
-    value={newComments[todo.id] || ""}
-    onChange={(e) => {
-      const value = e.target.value;
-      setNewComments({
-        ...newComments,
-        [todo.id]: value
-      });
-    }}
-  />
-
-  {/* ปุ่มทดสอบ state */}
-  <button onClick={() => {
-    alert(newComments[todo.id])
-  }}>
-    Add Comment
-  </button>
-</div>
-{/* ============================ */}
-
-    </li>
-  ))}
-</ul>
-
-      New: <input type="text" value={newTitle} onChange={(e) => {setNewTitle(e.target.value)}} />
-      <button onClick={() => {addNewTodo()}}>Add</button>
+      New: <input type="text" value={newTitle} onChange={(e) => { setNewTitle(e.target.value) }} />
+      <button onClick={() => { addNewTodo() }}>Add</button>
     </>
   )
 }
