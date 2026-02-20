@@ -45,5 +45,6 @@ describe('TodoItem', () => {
         expect(screen.getByText('Sample Todo')).toBeInTheDocument();
         expect(screen.getByText('First comment')).toBeInTheDocument();
         expect(screen.getByText('Another comment')).toBeInTheDocument();
+        expect(screen.getByText(/2/)).toBeInTheDocument();
     });
 });

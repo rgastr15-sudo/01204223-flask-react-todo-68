@@ -16,7 +16,7 @@ function TodoItem({ todo, toggleDone, deleteTodo, addNewComment }) {
             )}
             {(todo.comments) && (todo.comments.length > 0) && (
                 <>
-                    <b>Comments:</b>
+                    <b>Comments ({todo.comments.length}):</b>
                     <ul>
                         {todo.comments.map(comment => (
                             <li key={comment.id}>
