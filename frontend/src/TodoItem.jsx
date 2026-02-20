@@ -11,6 +11,9 @@ function TodoItem({ todo, toggleDone, deleteTodo, addNewComment }) {
             <button onClick={() => { deleteTodo(todo.id) }}>❌</button>
 
             {/* ===== แสดง comments ===== */}
+            {(!todo.comments || todo.comments.length === 0) && (
+                <div>No comments</div>
+            )}
             {(todo.comments) && (todo.comments.length > 0) && (
                 <>
                     <b>Comments:</b>
