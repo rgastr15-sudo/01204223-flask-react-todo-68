@@ -7,8 +7,8 @@ import LoginForm from './LoginForm.jsx';
 import PrivateRoute from './PrivateRoute.jsx';
 
 function App() {
-  const TODOLIST_API_URL = 'http://localhost:5002/api/todos/';
-  const TODOLIST_LOGIN_URL = 'http://localhost:5002/api/login/';
+  const TODOLIST_API_URL = '/api/todos/';
+  const TODOLIST_LOGIN_URL = '/api/login/';
 
   return (
     <AuthProvider>
